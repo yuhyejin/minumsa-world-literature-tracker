@@ -173,7 +173,7 @@ export default function Home() {
         book.title.toLowerCase().includes(q) ||
         book.author.toLowerCase().includes(q) ||
         book.number.toString().includes(q) ||
-        (book.displayNumber && book.displayNumber.toLowerCase().includes(q))
+        book.displayNumber?.toLowerCase().includes(q)
       );
     }
     return true;
