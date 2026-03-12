@@ -2,7 +2,7 @@
 
 import type { User } from '@supabase/supabase-js';
 
-type ViewMode = 'cover' | 'number';
+type ViewMode = 'cover' | 'number' | 'bingo';
 
 interface HeaderProps {
     viewMode: ViewMode;

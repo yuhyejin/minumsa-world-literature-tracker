@@ -54,14 +54,34 @@ function getBingoLineCells(blockBooks: Book[], readBooks: Set<number>): Set<numb
     return cells;
 }
 
+const CUSTOM_BLOCK_NUMBERS = [21, 22, 51, 52, 73, 135, 136, 148, 186, 187, 192, 254, 266, 277, 280, 359, 432, 451, 414, 415, 99, 257, 400, 346, 351];
+
 export function NumberView({ books, readBooks, onToggle, numberViewMode = 'bingo' }: NumberViewProps) {
     const blocks = useMemo(() => {
+        if (numberViewMode !== 'bingo') return [];
+        
         const result: Book[][] = [];
-        for (let i = 0; i < books.length; i += 25) {
-            result.push(books.slice(i, i + 25));
+        const customBlockSet = new Set(CUSTOM_BLOCK_NUMBERS);
+        
+        // 1. Create the first custom block based on requested order
+        const customBlock: Book[] = [];
+        CUSTOM_BLOCK_NUMBERS.forEach(num => {
+            const book = books.find(b => b.number === num);
+            if (book) customBlock.push(book);
+        });
+        
+        if (customBlock.length > 0) {
+            result.push(customBlock);
         }
+        
+        // 2. Create remaining blocks from remaining books
+        const remainingBooks = books.filter(b => !customBlockSet.has(b.number));
+        for (let i = 0; i < remainingBooks.length; i += 25) {
+            result.push(remainingBooks.slice(i, i + 25));
+        }
+        
         return result;
-    }, [books]);
+    }, [books, numberViewMode]);
 
     if (numberViewMode === 'grid') {
         // Simple grid mode
@@ -100,7 +120,9 @@ export function NumberView({ books, readBooks, onToggle, numberViewMode = 'bingo
                 return (
                     <div key={blockIndex} className="bingo-block-wrapper dark:bg-slate-900 dark:border-slate-700">
                         <div className="bingo-block-header">
-                            <span className="bingo-block-range">{startNum} - {endNum} 블록</span>
+                            <span className="bingo-block-range">
+                                {blockIndex === 0 ? '📕 빨강' : `${startNum} - ${endNum} 블록`}
+                            </span>
                             {bingoLines > 0 && (
                                 <span className="bingo-count-badge">{bingoLines} 빙고!</span>
                             )}
@@ -113,21 +135,34 @@ export function NumberView({ books, readBooks, onToggle, numberViewMode = 'bingo
                                 return (
                                     <div
                                         key={book.number}
-                                        className={`bingo-cell dark:bg-slate-800 ${isRead ? 'is-read dark:!bg-white dark:border-[3px] dark:border-[#facc15]' : ''} ${isBingoLine ? 'is-bingo-line' : ''}`}
+                                        className={`bingo-cell dark:bg-slate-800 ${isRead ? 'is-read' : ''} ${isBingoLine ? 'is-bingo-line' : ''}`}
                                         onClick={() => onToggle(book.number)}
                                         role="button"
                                         tabIndex={0}
                                         onKeyDown={(e) => e.key === 'Enter' && onToggle(book.number)}
                                         aria-label={`${book.number}번 ${book.title} - ${isRead ? '읽음' : '안 읽음'}`}
                                     >
+                                        {book.coverUrl && (
+                                            <div className="absolute inset-0 overflow-hidden">
+                                                <img 
+                                                    src={book.coverUrl} 
+                                                    alt={book.title} 
+                                                    className={`w-full h-full object-cover transition-transform duration-300 ${isRead ? 'opacity-40 grayscale-[0.5]' : 'opacity-100'}`}
+                                                />
+                                            </div>
+                                        )}
                                         {isRead && (
-                                            <div className="absolute top-1 right-1 text-[#facc15] dark:text-[#eab308]">
+                                            <div className="absolute top-1.5 right-1.5 z-10 text-white bg-[#facc15] dark:bg-[#eab308] rounded-full p-0.5 shadow-md">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                                                     <polyline points="20 6 9 17 4 12"></polyline>
                                                 </svg>
                                             </div>
                                         )}
-                                        <span className="bingo-number-text dark:text-slate-400 ${isRead ? 'dark:!text-slate-900' : ''}">{book.number}</span>
+                                        {!book.coverUrl && (
+                                            <span className={`bingo-number-text z-10 relative dark:text-slate-400 ${isRead ? 'dark:!text-slate-900' : ''}`}>
+                                                {book.number}
+                                            </span>
+                                        )}
                                         <span className="tooltip dark:bg-white dark:text-slate-900">{book.title} - {book.author}</span>
                                     </div>
                                 );

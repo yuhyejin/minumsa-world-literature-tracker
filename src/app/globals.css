@@ -371,6 +371,17 @@ body {
   cursor: pointer;
   position: relative;
   transition: var(--transition-bounce);
+  overflow: hidden;
+}
+
+.bingo-cell:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+}
+
+.bingo-cell:hover img {
+  transform: scale(1.1);
 }
 
 @media (prefers-color-scheme: dark) {

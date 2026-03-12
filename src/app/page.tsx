@@ -11,7 +11,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { ResetPasswordModal } from '@/components/ResetPasswordModal';
 import type { User } from '@supabase/supabase-js';
 
-type ViewMode = 'cover' | 'number';
+type ViewMode = 'cover' | 'number' | 'bingo';
 type FilterMode = 'all' | 'read' | 'unread';
 
 export default function Home() {
@@ -23,7 +23,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<FilterMode>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [numberViewMode, setNumberViewMode] = useState<'grid' | 'bingo'>('bingo');
 
   // Check auth status
   useEffect(() => {
@@ -240,7 +239,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-5 py-8 space-y-8">
         {/* View Mode Selector - Just below Header */}
         <div className="flex justify-start">
-          <div className="flex flex-nowrap w-full sm:w-auto bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div className="flex flex-nowrap w-full sm:w-auto bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-x-auto scrollbar-hide">
             <button
               className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${viewMode === 'cover' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
               onClick={() => setViewMode('cover')}
@@ -253,6 +252,12 @@ export default function Home() {
             >
               숫자 모드
             </button>
+            <button
+              className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${viewMode === 'bingo' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
+              onClick={() => setViewMode('bingo')}
+            >
+              빙고 모드
+            </button>
           </div>
         </div>
 
@@ -260,7 +265,7 @@ export default function Home() {
           readCount={readBooks.size}
           totalCount={books.length}
           bingoCount={bingoCount}
-          isBingoMode={viewMode === 'number' && numberViewMode === 'bingo'}
+          isBingoMode={viewMode === 'bingo'}
         />
 
         {/* Search and Filters Container */}
@@ -298,22 +303,6 @@ export default function Home() {
               </button>
             </div>
 
-            {viewMode === 'number' && (
-              <div className="flex flex-nowrap bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl gap-1">
-                <button
-                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'grid' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
-                  onClick={() => setNumberViewMode('grid')}
-                >
-                  일반
-                </button>
-                <button
-                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'bingo' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
-                  onClick={() => setNumberViewMode('bingo')}
-                >
-                  빙고
-                </button>
-              </div>
-            )}
           </div>
         </div>
 
@@ -326,12 +315,12 @@ export default function Home() {
             />
           ) : (
             <NumberView
-              books={numberViewMode === 'bingo' ? books : filteredBooks}
+              books={viewMode === 'bingo' ? books : filteredBooks}
               readBooks={readBooks}
               onToggle={toggleBook}
               searchQuery={searchQuery}
               filter={filter}
-              numberViewMode={numberViewMode}
+              numberViewMode={viewMode === 'bingo' ? 'bingo' : 'grid'}
             />
           )}
         </div>
