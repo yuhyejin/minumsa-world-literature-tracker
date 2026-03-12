@@ -13,15 +13,17 @@ export function ProgressBar({ readCount, totalCount, bingoCount = 0, isBingoMode
 
     if (isBingoMode) {
         return (
-            <div className="flex flex-row gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* 읽은 권수 - Dark Navy Card */}
-                <div className="flex-1 bg-[#1e293b] p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm transition-all hover:shadow-md">
-                    <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">읽은 권수</span>
-                    <div className="flex items-baseline gap-1.5 mt-2">
-                        <span className="text-4xl font-black text-white">{readCount}</span>
-                        <span className="text-xl font-bold text-slate-400">권</span>
+                <div className="flex flex-col justify-between bg-[#1e293b] p-6 rounded-3xl shadow-sm transition-all hover:shadow-md h-full">
+                    <div>
+                        <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">읽은 권수</span>
+                        <div className="flex items-baseline gap-1.5 mt-2">
+                            <span className="text-4xl font-black text-white">{readCount}</span>
+                            <span className="text-xl font-bold text-slate-400">권</span>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-1.5 mt-3 text-sm font-bold text-emerald-400">
+                    <div className="flex items-center gap-1.5 mt-6 text-sm font-bold text-emerald-400">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
@@ -30,13 +32,15 @@ export function ProgressBar({ readCount, totalCount, bingoCount = 0, isBingoMode
                 </div>
 
                 {/* 달성 빙고 - Yellow Accent Card */}
-                <div className="flex-1 bg-white dark:bg-slate-800 border-2 border-[#facc15] p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm transition-all hover:shadow-md">
-                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">달성 빙고</span>
-                    <div className="flex items-baseline gap-1.5 mt-2">
-                        <span className="text-4xl font-black text-[#1e293b] dark:text-white">{bingoCount}</span>
-                        <span className="text-xl font-bold text-slate-400">줄</span>
+                <div className="flex flex-col justify-between bg-white dark:bg-slate-800 border-2 border-[#facc15] p-6 rounded-3xl shadow-sm transition-all hover:shadow-md h-full">
+                    <div>
+                        <span className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">달성 빙고</span>
+                        <div className="flex items-baseline gap-1.5 mt-2">
+                            <span className="text-4xl font-black text-[#1e293b] dark:text-white">{bingoCount}</span>
+                            <span className="text-xl font-bold text-slate-400">줄</span>
+                        </div>
                     </div>
-                    <div className="mt-3 text-sm font-bold text-slate-500 dark:text-slate-400">
+                    <div className="mt-6 text-sm font-bold text-slate-500 dark:text-slate-400">
                         {totalBlocks}개 블록 진행 중
                     </div>
                 </div>
@@ -45,25 +49,29 @@ export function ProgressBar({ readCount, totalCount, bingoCount = 0, isBingoMode
     }
 
     return (
-        <div className="flex flex-row gap-3 sm:gap-4">
-            <div className="flex-1 bg-[#f0f4f8] dark:bg-slate-800 border border-[#d9e2ec] dark:border-slate-700 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm transition-all hover:shadow-md">
-                <span className="text-sm font-bold text-[#1e293b] dark:text-slate-300 uppercase tracking-wider">읽은 권수</span>
-                <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-4xl font-black text-[#1e293b] dark:text-white">{readCount}</span>
-                    <span className="text-xl font-bold text-slate-400">권</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col justify-between bg-[#f0f4f8] dark:bg-slate-800 border border-[#d9e2ec] dark:border-slate-700 p-6 rounded-3xl shadow-sm transition-all hover:shadow-md h-full">
+                <div>
+                    <span className="text-sm font-bold text-[#1e293b] dark:text-slate-300 uppercase tracking-wider">읽은 권수</span>
+                    <div className="flex items-baseline gap-1 mt-2">
+                        <span className="text-4xl font-black text-[#1e293b] dark:text-white">{readCount}</span>
+                        <span className="text-xl font-bold text-slate-400">권</span>
+                    </div>
                 </div>
-                <div className="mt-3 text-sm font-bold text-slate-500 dark:text-slate-400">
+                <div className="mt-6 text-sm font-bold text-slate-500 dark:text-slate-400">
                     📚 {totalCount - readCount}권 남음
                 </div>
             </div>
 
-            <div className="flex-1 bg-[#1e293b] p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm transition-all hover:shadow-md">
-                <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">전체 권수</span>
-                <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-4xl font-black text-white">{totalCount}</span>
-                    <span className="text-xl font-bold text-slate-400">권</span>
+            <div className="flex flex-col justify-between bg-[#1e293b] p-6 rounded-3xl shadow-sm transition-all hover:shadow-md h-full">
+                <div>
+                    <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">전체 권수</span>
+                    <div className="flex items-baseline gap-1 mt-2">
+                        <span className="text-4xl font-black text-white">{totalCount}</span>
+                        <span className="text-xl font-bold text-slate-400">권</span>
+                    </div>
                 </div>
-                <div className="mt-3 space-y-1.5">
+                <div className="mt-6 space-y-2">
                     <div className="h-3 w-full bg-slate-600 rounded-full overflow-hidden">
                         <div 
                             className="h-full bg-[#facc15] rounded-full transition-all duration-1000 ease-out"

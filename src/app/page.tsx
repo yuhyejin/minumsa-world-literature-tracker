@@ -138,8 +138,15 @@ export default function Home() {
   }, [user, readBooks]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setReadBooks(new Set());
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      setUser(null);
+      setReadBooks(new Set());
+    } catch (err) {
+      console.error('[Auth] Logout error', err);
+    }
   };
 
   const bingoCount = useMemo(() => {
@@ -238,13 +245,13 @@ export default function Home() {
               className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${viewMode === 'cover' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
               onClick={() => setViewMode('cover')}
             >
-              📖 표지 모드
+              표지 모드
             </button>
             <button
               className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${viewMode === 'number' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
               onClick={() => setViewMode('number')}
             >
-              🔢 숫자 모드
+              숫자 모드
             </button>
           </div>
         </div>
@@ -256,57 +263,58 @@ export default function Home() {
           isBingoMode={viewMode === 'number' && numberViewMode === 'bingo'}
         />
 
-        <div className="max-w-xl mx-auto w-full">
+        {/* Search and Filters Container */}
+        <div className="space-y-6">
           <div className="relative group">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-400 group-focus-within:text-[#1e293b] transition-colors">🔍</span>
+            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-400 group-focus-within:text-slate-600 transition-colors">🔍</span>
             <input
-              className="w-full pl-14 pr-6 py-2.5 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-[#1e293b] focus:ring-4 focus:ring-[#1e293b]/10 outline-none transition-all text-base shadow-sm"
+              className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-slate-300 outline-none transition-all text-lg shadow-sm"
               type="text"
               placeholder="제목, 저자 또는 번호로 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-        </div>
 
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6 border-b border-slate-100 pb-8">
-          <div className="flex flex-nowrap w-full md:w-auto bg-slate-100 p-1.5 rounded-2xl gap-1 overflow-x-auto scrollbar-hide">
-            <button
-              className={`flex-1 md:flex-none px-3 sm:px-6 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${filter === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              onClick={() => setFilter('all')}
-            >
-              전체 ({books.length})
-            </button>
-            <button
-              className={`flex-1 md:flex-none px-3 sm:px-6 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${filter === 'read' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              onClick={() => setFilter('read')}
-            >
-              읽음 ({readBooks.size})
-            </button>
-            <button
-              className={`flex-1 md:flex-none px-3 sm:px-6 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${filter === 'unread' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              onClick={() => setFilter('unread')}
-            >
-              안 읽음 ({books.length - readBooks.size})
-            </button>
-          </div>
-
-          {viewMode === 'number' && (
-            <div className="flex flex-nowrap w-full md:w-auto bg-slate-100 p-1.5 rounded-2xl gap-1">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div className="flex flex-nowrap bg-slate-100 p-1.5 rounded-2xl gap-1 overflow-x-auto scrollbar-hide">
               <button
-                className={`flex-1 md:flex-none px-6 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'grid' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                onClick={() => setNumberViewMode('grid')}
+                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                onClick={() => setFilter('all')}
               >
-                일반
+                전체 ({books.length})
               </button>
               <button
-                className={`flex-1 md:flex-none px-6 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'bingo' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                onClick={() => setNumberViewMode('bingo')}
+                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'read' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                onClick={() => setFilter('read')}
               >
-                빙고
+                읽음 ({readBooks.size})
+              </button>
+              <button
+                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'unread' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                onClick={() => setFilter('unread')}
+              >
+                안 읽음 ({books.length - readBooks.size})
               </button>
             </div>
-          )}
+
+            {viewMode === 'number' && (
+              <div className="flex flex-nowrap bg-slate-100 p-1.5 rounded-2xl gap-1">
+                <button
+                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'grid' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  onClick={() => setNumberViewMode('grid')}
+                >
+                  일반
+                </button>
+                <button
+                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'bingo' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  onClick={() => setNumberViewMode('bingo')}
+                >
+                  빙고
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div>

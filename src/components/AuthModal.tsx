@@ -26,6 +26,9 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 const { error } = await supabase.auth.signUp({
                     email,
                     password,
+                    options: {
+                        emailRedirectTo: `${window.location.origin}/`,
+                    }
                 });
                 if (error) throw error;
                 setMessage('확인 이메일을 전송했습니다. 이메일을 확인해주세요!');
