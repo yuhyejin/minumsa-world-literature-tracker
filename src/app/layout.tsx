@@ -24,7 +24,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}
+      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
+        {children}
         <GoogleAnalytics gaId="G-1977DMWQ33" />
       </body>
     </html>

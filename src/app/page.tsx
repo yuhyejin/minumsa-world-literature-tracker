@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { books } from '@/data/books';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { CoverView } from '@/components/CoverView';
 import { NumberView } from '@/components/NumberView';
 import { AuthModal } from '@/components/AuthModal';
@@ -222,6 +223,7 @@ export default function Home() {
         </div>
         {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
         {showReset && <ResetPasswordModal onClose={() => setShowReset(false)} />}
+        <Footer />
       </>
     );
   }
@@ -328,6 +330,7 @@ export default function Home() {
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
       {showReset && <ResetPasswordModal onClose={() => setShowReset(false)} />}
+      <Footer />
     </>
   );
 }
