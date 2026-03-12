@@ -17,7 +17,7 @@ export function CoverView({ books, readBooks, onToggle }: CoverViewProps) {
                 return (
                     <div
                         key={book.number}
-                        className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/50 ${isRead ? 'border-[#1e293b] ring-2 ring-[#1e293b] ring-offset-2 dark:ring-offset-slate-900 shadow-md' : 'border-slate-200 dark:border-slate-800'}`}
+                        className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-white/5 ${isRead ? 'border-[#1e293b] dark:border-white ring-2 ring-[#1e293b] dark:ring-white ring-offset-2 dark:ring-offset-slate-900 shadow-md' : 'border-slate-200 dark:border-slate-800'}`}
                         onClick={() => onToggle(book.number)}
                         role="button"
                         tabIndex={0}
@@ -25,7 +25,7 @@ export function CoverView({ books, readBooks, onToggle }: CoverViewProps) {
                         aria-label={`${book.number}번 ${book.title} - ${isRead ? '읽음' : '안 읽음'}`}
                     >
                         {isRead && (
-                            <div className="absolute top-3 right-3 z-10 w-8 h-8 bg-[#1e293b] rounded-full flex items-center justify-center text-white shadow-sm font-bold animate-in zoom-in duration-200">
+                            <div className="absolute top-3 right-3 z-10 w-8 h-8 bg-[#1e293b] dark:bg-white rounded-full flex items-center justify-center text-white dark:text-[#1e293b] shadow-sm font-bold animate-in zoom-in duration-200">
                                 ✓
                             </div>
                         )}

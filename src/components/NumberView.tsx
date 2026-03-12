@@ -98,7 +98,7 @@ export function NumberView({ books, readBooks, onToggle, numberViewMode = 'bingo
                 const bingoLineCells = getBingoLineCells(block, readBooks);
 
                 return (
-                    <div key={blockIndex} className="bingo-block-wrapper">
+                    <div key={blockIndex} className="bingo-block-wrapper dark:bg-slate-900 dark:border-slate-700">
                         <div className="bingo-block-header">
                             <span className="bingo-block-range">{startNum} - {endNum} 블록</span>
                             {bingoLines > 0 && (
@@ -113,7 +113,7 @@ export function NumberView({ books, readBooks, onToggle, numberViewMode = 'bingo
                                 return (
                                     <div
                                         key={book.number}
-                                        className={`bingo-cell ${isRead ? 'is-read' : ''} ${isBingoLine ? 'is-bingo-line' : ''}`}
+                                        className={`bingo-cell dark:bg-slate-800 ${isRead ? 'is-read dark:!bg-white dark:border-[3px] dark:border-[#facc15]' : ''} ${isBingoLine ? 'is-bingo-line' : ''}`}
                                         onClick={() => onToggle(book.number)}
                                         role="button"
                                         tabIndex={0}
@@ -121,14 +121,14 @@ export function NumberView({ books, readBooks, onToggle, numberViewMode = 'bingo
                                         aria-label={`${book.number}번 ${book.title} - ${isRead ? '읽음' : '안 읽음'}`}
                                     >
                                         {isRead && (
-                                            <div className="absolute top-1 right-1 text-[#facc15]">
+                                            <div className="absolute top-1 right-1 text-[#facc15] dark:text-[#eab308]">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                                                     <polyline points="20 6 9 17 4 12"></polyline>
                                                 </svg>
                                             </div>
                                         )}
-                                        <span className="bingo-number-text">{book.number}</span>
-                                        <span className="tooltip">{book.title} - {book.author}</span>
+                                        <span className="bingo-number-text dark:text-slate-400 ${isRead ? 'dark:!text-slate-900' : ''}">{book.number}</span>
+                                        <span className="tooltip dark:bg-white dark:text-slate-900">{book.title} - {book.author}</span>
                                     </div>
                                 );
                             })}

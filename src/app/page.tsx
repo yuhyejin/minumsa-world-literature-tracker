@@ -204,18 +204,18 @@ export default function Home() {
           onLogin={() => setShowAuth(true)}
           onLogout={handleLogout}
         />
-        <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-80px)] text-center px-6 py-10 overflow-hidden bg-[radial-gradient(circle_at_50%_30%,#fff0f2_0%,transparent_60%)]">
-          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle,#f0f4f8_0%,transparent_70%)] opacity-60 -z-10 blur-[60px]" />
+        <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-80px)] text-center px-6 py-10 overflow-hidden bg-[radial-gradient(circle_at_50%_30%,#fff0f2_0%,transparent_60%)] dark:bg-[radial-gradient(circle_at_50%_30%,#1e293b_0%,#000000_60%)]">
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle,#f0f4f8_0%,transparent_70%)] dark:bg-[radial-gradient(circle,#1e293b_0%,transparent_70%)] opacity-60 -z-10 blur-[60px]" />
           <div className="text-7xl mb-6 animate-bounce drop-shadow-xl">✨</div>
-          <h1 className="text-[2rem] font-black leading-tight mb-6 tracking-tight bg-gradient-to-br from-slate-900 to-slate-500 bg-clip-text text-transparent">
+          <h1 className="text-[2rem] font-black leading-tight mb-6 tracking-tight bg-gradient-to-br from-slate-900 to-slate-500 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
             민음사 세계문학전집<br />도장깨기
           </h1>
-          <p className="text-xl text-slate-600 max-w-lg mb-10 leading-relaxed">
+          <p className="text-xl text-slate-600 dark:text-slate-300 max-w-lg mb-10 leading-relaxed">
             {books.length}권의 위대한 고전 문학,<br />
             당신은 얼마나 읽으셨나요?
           </p>
           <button
-            className="px-12 py-5 bg-slate-900 text-white rounded-full text-xl font-extrabold transition-all hover:scale-105 hover:bg-slate-800 shadow-2xl shadow-slate-900/20 active:scale-95"
+            className="px-12 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full text-xl font-extrabold transition-all hover:scale-105 hover:bg-slate-800 dark:hover:bg-slate-100 shadow-2xl shadow-slate-900/20 dark:shadow-white/10 active:scale-95"
             onClick={() => setShowAuth(true)}
           >
             시작하기
@@ -266,9 +266,9 @@ export default function Home() {
         {/* Search and Filters Container */}
         <div className="space-y-6">
           <div className="relative group">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-400 group-focus-within:text-slate-600 transition-colors">🔍</span>
+            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-400 group-focus-within:text-slate-600 dark:group-focus-within:text-white transition-colors">🔍</span>
             <input
-              className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-slate-300 outline-none transition-all text-lg shadow-sm"
+              className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 focus:border-slate-300 dark:focus:border-slate-600 outline-none transition-all text-lg shadow-sm text-slate-900 dark:text-white"
               type="text"
               placeholder="제목, 저자 또는 번호로 검색..."
               value={searchQuery}
@@ -277,21 +277,21 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            <div className="flex flex-nowrap bg-slate-100 p-1.5 rounded-2xl gap-1 overflow-x-auto scrollbar-hide">
+            <div className="flex flex-nowrap bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl gap-1 overflow-x-auto scrollbar-hide">
               <button
-                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'all' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
                 onClick={() => setFilter('all')}
               >
                 전체 ({books.length})
               </button>
               <button
-                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'read' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'read' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
                 onClick={() => setFilter('read')}
               >
                 읽음 ({readBooks.size})
               </button>
               <button
-                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'unread' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${filter === 'unread' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
                 onClick={() => setFilter('unread')}
               >
                 안 읽음 ({books.length - readBooks.size})
@@ -299,15 +299,15 @@ export default function Home() {
             </div>
 
             {viewMode === 'number' && (
-              <div className="flex flex-nowrap bg-slate-100 p-1.5 rounded-2xl gap-1">
+              <div className="flex flex-nowrap bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl gap-1">
                 <button
-                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'grid' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'grid' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
                   onClick={() => setNumberViewMode('grid')}
                 >
                   일반
                 </button>
                 <button
-                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'bingo' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 md:flex-none px-8 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${numberViewMode === 'bingo' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
                   onClick={() => setNumberViewMode('bingo')}
                 >
                   빙고

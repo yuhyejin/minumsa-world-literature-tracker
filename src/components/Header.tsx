@@ -38,7 +38,7 @@ export function Header({ viewMode, onViewModeChange, user, onLogin, onLogout }: 
                         </div>
                     ) : (
                         <button 
-                            className="px-5 py-2 rounded-xl text-sm font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5" 
+                            className="px-5 py-2 rounded-xl text-sm font-bold bg-slate-800 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5" 
                             onClick={onLogin}
                         >
                             로그인
