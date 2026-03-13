@@ -100,6 +100,16 @@ export default function Home() {
     }
   };
 
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  // Clear status message after 3 seconds
+  useEffect(() => {
+    if (statusMessage) {
+      const timer = setTimeout(() => setStatusMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
+
   const toggleBook = useCallback(async (bookNumber: number) => {
     if (!user) {
       setShowAuth(true);
@@ -107,7 +117,7 @@ export default function Home() {
     }
 
     const isCurrentlyRead = readBooks.has(bookNumber);
-
+    
     // Optimistic update
     setReadBooks(prev => {
       const next = new Set(prev);
@@ -119,21 +129,43 @@ export default function Home() {
       return next;
     });
 
-    if (isCurrentlyRead) {
-      await supabase
-        .from('reading_records')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('book_number', bookNumber);
-    } else {
-      await supabase
-        .from('reading_records')
-        .upsert({
-          user_id: user.id,
-          book_number: bookNumber,
-          is_read: true,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'user_id,book_number' });
+    try {
+      let result;
+      if (isCurrentlyRead) {
+        result = await supabase
+          .from('reading_records')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('book_number', bookNumber);
+      } else {
+        result = await supabase
+          .from('reading_records')
+          .upsert({
+            user_id: user.id,
+            book_number: bookNumber,
+            is_read: true,
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'user_id,book_number' });
+      }
+
+      if (result.error) {
+        throw result.error;
+      }
+    } catch (err) {
+      console.error('[DB] Toggle book error', err);
+      
+      // Rollback optimistic update
+      setReadBooks(prev => {
+        const next = new Set(prev);
+        if (isCurrentlyRead) {
+          next.add(bookNumber);
+        } else {
+          next.delete(bookNumber);
+        }
+        return next;
+      });
+
+      setStatusMessage('데이터 저장에 실패했습니다. 다시 시도해주세요.');
     }
   }, [user, readBooks]);
 
@@ -237,6 +269,16 @@ export default function Home() {
         onLogin={() => setShowAuth(true)}
         onLogout={handleLogout}
       />
+
+      {/* Floating Status Message */}
+      {statusMessage && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="bg-red-500 text-white px-6 py-3 rounded-2xl shadow-2xl font-bold flex items-center gap-2">
+            <span className="text-xl">⚠️</span>
+            {statusMessage}
+          </div>
+        </div>
+      )}
 
       <div className="max-w-6xl mx-auto px-5 py-8 space-y-8">
         {/* View Mode Selector - Just below Header */}
