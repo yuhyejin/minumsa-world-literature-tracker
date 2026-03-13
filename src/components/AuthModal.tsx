@@ -15,6 +15,23 @@ export function AuthModal({ onClose }: AuthModalProps) {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
+    const getErrorMessage = (err: any) => {
+        const message = err?.message || '';
+        if (message.includes('User already registered')) {
+            return '이미 가입된 이메일입니다. 로그인해 주세요.';
+        }
+        if (message.includes('Invalid login credentials')) {
+            return '이메일 또는 비밀번호가 잘못되었습니다.';
+        }
+        if (message.includes('Email not confirmed')) {
+            return '이메일 인증이 완료되지 않았습니다. 이메일을 확인해 주세요.';
+        }
+        if (message.includes('Password should be at least 6 characters')) {
+            return '비밀번호는 최소 6자 이상이어야 합니다.';
+        }
+        return message || '오류가 발생했습니다.';
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -23,14 +40,25 @@ export function AuthModal({ onClose }: AuthModalProps) {
 
         try {
             if (mode === 'signup') {
-                const { error } = await supabase.auth.signUp({
+                const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
                     options: {
                         emailRedirectTo: `${window.location.origin}/`,
                     }
                 });
+                
                 if (error) throw error;
+
+                // Supabase configuration might return data.user as null if email is already taken
+                // depending on "Allow multiple accounts per email" and security settings.
+                // But usually error is thrown if not allowed.
+                if (data?.user && data?.user.identities?.length === 0) {
+                    setError('이미 가입된 이메일입니다. 로그인해 주세요.');
+                    setLoading(false);
+                    return;
+                }
+
                 setMessage('확인 이메일을 전송했습니다. 이메일을 확인해주세요!');
             } else if (mode === 'reset') {
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -49,8 +77,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 onClose();
             }
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? err.message : '오류가 발생했습니다';
-            setError(errorMessage);
+            setError(getErrorMessage(err));
         } finally {
             setLoading(false);
         }
